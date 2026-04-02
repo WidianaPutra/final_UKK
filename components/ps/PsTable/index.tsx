@@ -10,31 +10,36 @@ import {
   TableCaption,
 } from "@/components/ui/table";
 
-export default function PsTable() {
+type PsTablePropTypes = {
+  children: React.ReactNode;
+  headerDatas: Array<string>;
+  tableCaption?: string;
+};
+
+export default function PsTable({
+  children,
+  headerDatas,
+  tableCaption,
+}: PsTablePropTypes) {
   return (
     <div>
       <Table>
-        <TableCaption>List Acumalaka</TableCaption>
+        <TableCaption>{tableCaption}</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>No</TableHead>
-            <TableHead>Nama</TableHead>
-            <TableHead>Email</TableHead>
+            {headerDatas?.map((data: any, i: number) => (
+              <TableHead key={i}>{data}</TableHead>
+            ))}
           </TableRow>
         </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell>1</TableCell>
-            <TableCell>Acumalaka</TableCell>
-            <TableCell>Email@gmail.com</TableCell>
-          </TableRow>
-        </TableBody>
+        {children}
+        {/* <TableBody></TableBody>
         <TableFooter>
           <TableRow>
             <TableCell colSpan={2}>Total</TableCell>
             <TableCell className="text-right">$2,500.00</TableCell>
           </TableRow>
-        </TableFooter>
+        </TableFooter> */}
       </Table>
     </div>
   );

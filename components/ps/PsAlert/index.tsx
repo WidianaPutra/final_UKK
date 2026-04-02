@@ -14,8 +14,8 @@ import { Button } from "@/components/ui/button";
 export function PsAlert() {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button>Delete</Button>
+      <AlertDialogTrigger asChild className="cursor-pointer">
+        <Button>Alert</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -25,8 +25,12 @@ export function PsAlert() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Hapus</AlertDialogAction>
+          <AlertDialogCancel className="cursor-pointer">
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction className="cursor-pointer">
+            Hapus
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import {
   User,
   GraduationCap,
@@ -12,6 +12,7 @@ import {
   Trash,
   Eye,
   LucideProps,
+  LogOut,
 } from "lucide-react";
 
 const SVGList = {
@@ -26,6 +27,7 @@ const SVGList = {
   pen: Pen,
   trash: Trash,
   eye: Eye,
+  "log-out": LogOut,
 };
 
 export type SVGListTypes = keyof typeof SVGList;
@@ -34,9 +36,27 @@ interface PsSVGPropTypes extends LucideProps {
   name: SVGListTypes;
 }
 
-const PsSVG = ({ name, className, ...props }: PsSVGPropTypes) => {
-  const SVG = SVGList[name];
-  return <SVG {...props} className={cn("aspect-square", className)} />;
+const PsSVG = ({
+  name,
+  className,
+  size,
+  strokeWidth = 1.5,
+  ...props
+}: PsSVGPropTypes) => {
+  const SVG = SVGList[name] ?? User;
+  return (
+    <SVG
+      {...props}
+      strokeWidth={strokeWidth}
+      style={{
+        width: size ?? undefined,
+        height: size ?? undefined,
+        minWidth: size ?? undefined, // ← ini kuncinya, mencegah flex shrink
+        minHeight: size ?? undefined,
+      }}
+      className={cn(!size && "aspect-square", className)}
+    />
+  );
 };
 
 export default PsSVG;

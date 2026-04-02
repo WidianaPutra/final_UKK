@@ -6,16 +6,19 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 
-function PsTooltip() {
+type TooltipPropTypes = {
+  children: React.ReactNode;
+  message: string;
+};
+
+function PsTooltip({ children, message }: TooltipPropTypes) {
   return (
     <div>
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger asChild>
-            <Button>Hover Me</Button>
-          </TooltipTrigger>
+          <TooltipTrigger asChild>{children}</TooltipTrigger>
           <TooltipContent>
-            <p>Hi, My name is Surya</p>
+            <p>{message}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

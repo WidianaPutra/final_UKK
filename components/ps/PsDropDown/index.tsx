@@ -1,32 +1,60 @@
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuItem,
   DropdownMenuGroup,
+  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
-function PsDropdown() {
+// ── Types ─────────────────────────────────────────────────────────────────────
+export type PsDropdownItem = {
+  label: string;
+  value: string;
+  icon?: React.ReactNode;
+  disabled?: boolean;
+};
+
+type PsDropdownProps = {
+  label: string;
+  items: PsDropdownItem[];
+  onSelect?: (item: PsDropdownItem) => void;
+  variant?: "outline" | "default" | "ghost" | "destructive" | "secondary";
+  align?: "start" | "center" | "end";
+  disabled?: boolean;
+};
+
+// ── Component ─────────────────────────────────────────────────────────────────
+function PsDropdown({
+  label,
+  items,
+  onSelect,
+  variant = "outline",
+  align = "start",
+  disabled = false,
+}: PsDropdownProps) {
   return (
-    <div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline">Buka</Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuGroup>
-            <DropdownMenuLabel className="text-gray-500 text-[14px]">
-              My Account
-            </DropdownMenuLabel>
-            <DropdownMenuItem>Hadir</DropdownMenuItem>
-            <DropdownMenuItem>Sakit</DropdownMenuItem>
-            <DropdownMenuItem>Alpha</DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild disabled={disabled}>
+        <Button variant={variant}>{label}</Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align={align}>
+        <DropdownMenuGroup>
+          {items.map((item) => (
+            <DropdownMenuItem
+              key={item.value}
+              disabled={item.disabled}
+              onSelect={() => onSelect?.(item)}
+              className="cursor-pointer gap-2"
+            >
+              {item.icon && <span className="w-4 h-4">{item.icon}</span>}
+              {item.label}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

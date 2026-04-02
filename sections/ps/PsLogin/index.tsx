@@ -32,7 +32,7 @@ export default function PsLoginPage() {
             <div className="grid gap-2">
               <div className="flex justify-between">
                 <Label htmlFor="password">Password</Label>
-                <a href="" className="text-sm hover:underline">
+                <a href="/" className="text-sm hover:underline">
                   Forget password?
                 </a>
               </div>
