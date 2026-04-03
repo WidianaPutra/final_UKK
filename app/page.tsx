@@ -31,7 +31,15 @@ export default function Home() {
   return (
     <div className=" p-4 min-h-[200vh]">
       <PsLoginPage />
-      <PsAlert />
+      <PsAlert
+        label={<h1>Hallo, World</h1>}
+        description="testing cihuy"
+        title="AAAA"
+        cancelText="batal"
+        confirmText="yaa"
+        onCancel={() => console.log()}
+        onConfirm={() => console.log()}
+      />
       <PsAdminForm />
       <PsStudentForm classes={[{ id: "RPL1", name: "XII RPL 1" }]} />
 
@@ -59,6 +67,7 @@ export default function Home() {
       <br />
       <br />
       <PsReportTable />
+      <PsReportTable context="student" />
       <PsAdminTable />
       <PsStudentTable />
     </div>

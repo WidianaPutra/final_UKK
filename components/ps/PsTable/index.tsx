@@ -12,7 +12,7 @@ import {
 
 type PsTablePropTypes = {
   children: React.ReactNode;
-  headerDatas: Array<string>;
+  headerDatas: Array<string | null>;
   tableCaption?: string;
 };
 

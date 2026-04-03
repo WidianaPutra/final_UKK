@@ -65,17 +65,11 @@ import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { cn } from "@/libs/utils";
 
 export default function PsStudentTable() {
-  function handleDetail(student: DummyStudent) {
-    console.log("detail", student.id);
-  }
+  function handleDetail(id: string) {}
 
-  function handleEdit(student: DummyStudent) {
-    console.log("edit", student.id);
-  }
+  function handleEdit(id: string) {}
 
-  function handleDelete(student: DummyStudent) {
-    console.log("delete", student.id);
-  }
+  function handleDelete(id: string) {}
 
   return (
     <>
@@ -165,12 +159,18 @@ export default function PsStudentTable() {
                       icon: (
                         <PsSVG name="trash" className="w-4 h-4 text-red-500" />
                       ),
+                      alert: {
+                        title: "Hapus Laporan?",
+                        description: `Laporan ini akan dihapus secara permanen dan tidak dapat dikembalikan.`,
+                        confirmText: "Ya, Hapus",
+                        cancelText: "Batal",
+                        onConfirm: () => handleDelete(student.id),
+                      },
                     },
                   ]}
                   onSelect={(item) => {
-                    if (item.value === "detail") handleDetail(student);
-                    if (item.value === "edit") handleEdit(student);
-                    if (item.value === "delete") handleDelete(student);
+                    if (item.value === "detail") handleDetail(student.id);
+                    if (item.value === "edit") handleEdit(student.id);
                   }}
                 />
               </TableCell>

@@ -103,22 +103,31 @@ function StatusBadge({ status }: { status: ReportStatus }) {
   );
 }
 
-export default function PsReportTable() {
+export default function PsReportTable({
+  context = "admin",
+}: {
+  context?: "student" | "admin";
+}) {
+  function handleDelete(id: string) {}
+  function handleEdit(id: string) {}
+  function handleDetail(id: string) {}
   return (
     <>
-      <h1 className="text-3xl font-extrabold pb-5">Home</h1>
+      <h1 className="text-3xl font-extrabold pb-5">Report</h1>
 
       <PsTable
-        headerDatas={[
-          "No",
-          "Nama Siswa",
-          "Kelas",
-          "Kategori",
-          "Pesan",
-          "Status",
-          "Tanggal",
-          "Aksi",
-        ]}
+        headerDatas={
+          [
+            "No",
+            context == "admin" ? "Nama Siswa" : null,
+            context == "admin" ? "Kelas" : null,
+            "Kategori",
+            "Pesan",
+            "Status",
+            "Tanggal",
+            "aksi",
+          ].filter(Boolean) as string[]
+        }
       >
         <TableBody>
           {dummyReports.map((report, index) => (
@@ -135,28 +144,32 @@ export default function PsReportTable() {
               </TableCell>
 
               {/* Nama Siswa + NIS */}
-              <TableCell>
-                <div className="flex flex-col">
-                  <span className="font-semibold text-sm">
-                    {report.student.name}
-                  </span>
-                  <span className="text-xs text-gray-400">
-                    NIS: {report.student.nis}
-                  </span>
-                </div>
-              </TableCell>
+              {context == "admin" && (
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-sm">
+                      {report.student.name}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      NIS: {report.student.nis}
+                    </span>
+                  </div>
+                </TableCell>
+              )}
 
               {/* Kelas */}
-              <TableCell className="text-sm text-gray-600">
-                {report.student.className}
-              </TableCell>
+              {context == "admin" && (
+                <TableCell className="text-sm text-gray-600">
+                  {report.student.className}
+                </TableCell>
+              )}
 
               {/* Kategori */}
               <TableCell className="text-sm text-gray-600">
                 {report.category.name}
               </TableCell>
 
-              {/* Pesan — truncate panjang */}
+              {/* Pesan truncate panjang */}
               <TableCell className="text-sm text-gray-600 max-w-[200px]">
                 <PsTooltip message={report.message}>
                   <span className="truncate block cursor-default">
@@ -187,25 +200,30 @@ export default function PsReportTable() {
                       icon: <PsSVG name="eye" className="w-4 h-4" />,
                     },
                     {
+                      label: "Edit",
+                      value: "edit",
+                      icon: (
+                        <PsSVG name="pen" className="w-4 h-4 text-blue-500" />
+                      ),
+                    },
+                    {
                       label: "Hapus",
                       value: "delete",
                       icon: (
                         <PsSVG name="trash" className="w-4 h-4 text-red-500" />
                       ),
-                    },
-                    {
-                      label: "Edit",
-                      value: "perbaharui",
-                      icon: (
-                        <PsSVG name="pen" className="w-4 h-4 text-blue-500" />
-                      ),
+                      alert: {
+                        title: "Hapus Laporan?",
+                        description: `Laporan ini akan dihapus secara permanen dan tidak dapat dikembalikan.`,
+                        confirmText: "Ya, Hapus",
+                        cancelText: "Batal",
+                        onConfirm: () => handleDelete(report.id),
+                      },
                     },
                   ]}
                   onSelect={(item) => {
-                    if (item.value === "detail")
-                      console.log("detail", report.id);
-                    if (item.value === "delete")
-                      console.log("delete", report.id);
+                    if (item.value === "detail") handleDetail(report.id);
+                    if (item.value === "edit") handleEdit(report.id);
                   }}
                 />
               </TableCell>

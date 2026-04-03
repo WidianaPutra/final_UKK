@@ -59,17 +59,11 @@ import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { cn } from "@/libs/utils";
 
 export default function PsAdminTable() {
-  function handleDetail(admin: DummyAdmin) {
-    console.log("detail", admin.id);
-  }
+  function handleDetail(id: string) {}
 
-  function handleEdit(admin: DummyAdmin) {
-    console.log("edit", admin.id);
-  }
+  function handleEdit(id: string) {}
 
-  function handleDelete(admin: DummyAdmin) {
-    console.log("delete", admin.id);
-  }
+  function handleDelete(id: string) {}
 
   return (
     <>
@@ -162,12 +156,18 @@ export default function PsAdminTable() {
                       icon: (
                         <PsSVG name="trash" className="w-4 h-4 text-red-500" />
                       ),
+                      alert: {
+                        title: "Hapus Laporan?",
+                        description: `Laporan ini akan dihapus secara permanen dan tidak dapat dikembalikan.`,
+                        confirmText: "Ya, Hapus",
+                        cancelText: "Batal",
+                        onConfirm: () => handleDelete(admin.id),
+                      },
                     },
                   ]}
                   onSelect={(item) => {
-                    if (item.value === "detail") handleDetail(admin);
-                    if (item.value === "edit") handleEdit(admin);
-                    if (item.value === "delete") handleDelete(admin);
+                    if (item.value === "detail") handleDetail(admin?.id);
+                    if (item.value === "edit") handleEdit(admin?.id);
                   }}
                 />
               </TableCell>
