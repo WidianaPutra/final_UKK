@@ -1,4 +1,12 @@
-import { TableBody, TableRow, TableCell } from "@/components/ui/table";
+"use client";
+
+import {
+  TableBody,
+  TableRow,
+  TableCell,
+  TableFooter,
+  TableCaption,
+} from "@/components/ui/table";
 import { cn } from "@/libs/utils";
 import PsAdminLayout from "@/components/ps/PsAdminLayout";
 import PsTable from "@/components/ps/PsTable";
@@ -116,6 +124,7 @@ export default function PsReportTable({
       <h1 className="text-3xl font-extrabold pb-5">Report</h1>
 
       <PsTable
+        tableCaption="Data laporan"
         headerDatas={
           [
             "No",

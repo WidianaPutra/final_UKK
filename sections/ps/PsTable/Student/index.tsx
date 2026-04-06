@@ -76,6 +76,7 @@ export default function PsStudentTable() {
       <h1 className="text-3xl font-extrabold pb-5">Siswa</h1>
 
       <PsTable
+        tableCaption="Data siswa"
         headerDatas={[
           "No",
           "NIS",

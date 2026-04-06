@@ -3,10 +3,18 @@ import {
   NativeSelectOption,
 } from "@/components/ui/native-select";
 
-function PsSelect({ children }: { children: React.ReactNode }) {
+function PsSelect({
+  children,
+  name,
+}: {
+  children: React.ReactNode;
+  name: string;
+}) {
   return (
     <div>
-      <NativeSelect className="cursor-pointer">{children}</NativeSelect>
+      <NativeSelect className="cursor-pointer" name={name}>
+        {children}
+      </NativeSelect>
     </div>
   );
 }

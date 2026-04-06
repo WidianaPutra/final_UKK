@@ -9,23 +9,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import PsSelect from "@/components/ps/PsSelect";
 import { NativeSelectOption } from "@/components/ui/native-select";
 import { cn } from "@/libs/utils";
+import { Class } from "@/app/generated/prisma/client";
+import PsSelect from "@/components/ps/PsSelect";
 
 type PsStudentFormProps = {
   fullWidth?: boolean;
-  classes: Array<{ id: string; name: string }>;
+  classes: Array<Class>;
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
 };
 
 function PsStudentForm({
   fullWidth = false,
-  classes,
+  classes = [],
   onSubmit,
 }: PsStudentFormProps) {
   return (
-    <div className={cn(fullWidth ? "w-full" : "max-w-[450px]")}>
+    <div className={cn(fullWidth ? "w-full" : "w-full max-w-[450px]")}>
       <Card>
         <CardHeader>
           <CardTitle className="font-bold">Tambah Siswa</CardTitle>
@@ -93,13 +94,13 @@ function PsStudentForm({
             {/* Class */}
             <div className="grid gap-2">
               <Label htmlFor="classId">Kelas</Label>
-              <PsSelect>
+              <PsSelect name="classId">
                 <NativeSelectOption value="">
                   -- Pilih Kelas --
                 </NativeSelectOption>
                 {classes.map((c) => (
                   <NativeSelectOption key={c.id} value={c.id}>
-                    {c.name}
+                    {c.className}
                   </NativeSelectOption>
                 ))}
               </PsSelect>

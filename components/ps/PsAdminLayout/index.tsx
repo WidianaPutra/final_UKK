@@ -1,7 +1,9 @@
+"use client";
 import PsSVG, { type SVGListTypes } from "../PsSVG";
 import { Button } from "@/components/ui/button";
 import PsTooltip from "../PsTooltip";
 import { cn } from "@/libs/utils";
+import { PsAlert } from "../PsAlert";
 
 const sidebarMenuList: Array<{
   label: string;
@@ -9,9 +11,9 @@ const sidebarMenuList: Array<{
   icon: SVGListTypes;
 }> = [
   { label: "Home", url: "/admin", icon: "home" },
-  { label: "Laporan", url: "/admin/laporan", icon: "list" },
-  { label: "Siswa", url: "/admin/siswa", icon: "graduation-cap" },
-  { label: "Admin", url: "/admin/admin", icon: "user" },
+  { label: "Laporan", url: "/admin?sec=laporan", icon: "list" },
+  { label: "Siswa", url: "/admin?sec=siswa", icon: "graduation-cap" },
+  { label: "Admin", url: "/admin?sec=admin", icon: "user" },
 ];
 
 type PsAdminLayoutProps = {
@@ -25,8 +27,8 @@ function PsAdminLayout({ children, containClassName }: PsAdminLayoutProps) {
       {/* Sidebar */}
       <div className="border-r-2 border-black w-[250px] min-h-screen flex flex-col bg-white relative">
         {/* Logo */}
-        <div className="h-14 bg-black flex items-center justify-center">
-          <h1 className="text-white text-[20px] font-bold tracking-widest">
+        <div className="h-14 bg-gray-50 flex items-center justify-center">
+          <h1 className="text-black text-[20px] font-bold tracking-widest">
             SMPS
           </h1>
         </div>
@@ -55,25 +57,37 @@ function PsAdminLayout({ children, containClassName }: PsAdminLayoutProps) {
             </Button>
           ))}
         </nav>
-
-        <div className="absolute bottom-10 left-0">
-          <PsTooltip message="Logout">
-            <PsSVG
-              name="log-out"
-              className="text-red-500 cursor-pointer"
-              strokeWidth={2.5}
-              size={30}
-            />
-          </PsTooltip>
-        </div>
       </div>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-h-screen">
         {/* navigation bar */}
-        <div className="h-14 bg-black flex justify-end items-center px-5 gap-2">
-          <PsSVG name="user" className="text-white" strokeWidth={2.5} />
-          <span className="text-white">I Nyoman Triadi Swastika</span>
+        <div className="h-14 bg-gray-50 flex justify-end items-center px-5 gap-4">
+          <div className="flex gap-1">
+            <PsSVG
+              name="user"
+              className="text-black"
+              strokeWidth={3}
+              size={25}
+            />
+            <span className="text-black">I Nyoman Triadi Swastika</span>
+          </div>
+          <PsTooltip message="Log out">
+            <PsAlert
+              label={
+                <PsSVG
+                  name="log-out"
+                  className="text-red-500"
+                  strokeWidth={3}
+                  size={25}
+                />
+              }
+              title="Logout"
+              description="Apakah yakin ingin keluar?"
+              cancelText="Batal"
+              confirmText="Log out"
+            ></PsAlert>
+          </PsTooltip>
         </div>
 
         {/* Page content */}

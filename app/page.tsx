@@ -20,6 +20,8 @@ import PsReportForm from "@/components/ps/PsReportForm";
 import PsReportTable from "@/sections/ps/PsTable/Report";
 import PsAdminTable from "@/sections/ps/PsTable/Admin";
 import PsStudentTable from "@/sections/ps/PsTable/Student";
+import PsClassForm from "@/components/ps/PsClassForm";
+import PsClassTable from "@/sections/ps/PsTable/Class";
 
 export default function Home() {
   const menuItems = [
@@ -70,6 +72,11 @@ export default function Home() {
       <PsReportTable context="student" />
       <PsAdminTable />
       <PsStudentTable />
+      <PsClassTable />
+      <br />
+      <br />
+
+      <PsClassForm classes={[{ id: "RPL1", name: "XII RPL 1" }]} />
     </div>
   );
 }
