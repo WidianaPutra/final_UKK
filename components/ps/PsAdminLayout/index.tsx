@@ -46,7 +46,7 @@ function PsAdminLayout({ children, containClassName }: PsAdminLayoutProps) {
   const handleLogout = async () => {
     try {
       await axios.post("/api/auth/logout");
-      window.location.href = "/auth";
+      window.location.href = "/login";
     } catch (err) {
       console.error("Gagal logout:", err);
     }

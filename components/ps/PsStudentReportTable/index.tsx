@@ -6,8 +6,8 @@ import PsTable from "@/components/ps/PsTable";
 import PsDropdown from "@/components/ps/PsDropDown";
 import PsTooltip from "@/components/ps/PsTooltip";
 import PsSVG from "@/components/ps/PsSVG";
-import PsSelect from "@/components/ps/PsSelect"; // Import PsSelect
-import { NativeSelectOption } from "@/components/ui/native-select"; // Import Option
+import PsSelect from "@/components/ps/PsSelect";
+import { NativeSelectOption } from "@/components/ui/native-select";
 import { Button } from "@/components/ui/button";
 import { SetStateAction, useEffect, useState } from "react";
 import { AdminView } from "@/types/AdminView";
