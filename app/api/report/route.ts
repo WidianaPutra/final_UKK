@@ -24,23 +24,42 @@ const reportInclude = {
   },
 };
 
-export async function GET() {
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "secret");
+
+export async function GET(req: NextRequest) {
   try {
+    const token = req.cookies.get("token")?.value;
+
+    if (!token) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const userId = payload.userId as string;
+    const role = payload.role as string;
+
+    const whereCondition = role === "STUDENT" ? { studentId: userId } : {};
+
     const reports = await prisma.report.findMany({
+      where: whereCondition,
       include: reportInclude,
       orderBy: { createdAt: "desc" },
     });
 
     return NextResponse.json({ data: reports }, { status: 200 });
-  } catch (error) {
+  } catch (error: any) {
+    console.error("GET_REPORTS_ERROR:", error);
+
+    if (error.code === "ERR_JWT_EXPIRED") {
+      return NextResponse.json({ message: "Session Expired" }, { status: 401 });
+    }
+
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 },
     );
   }
 }
-
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "secret");
 
 export async function POST(req: NextRequest) {
   try {
@@ -82,12 +101,11 @@ export async function POST(req: NextRequest) {
       targetStudentId = student.id;
     }
 
-    // SIMPAN KE DATABASE
     const newReport = await prisma.report.create({
       data: {
         message: body.message,
         categoryId: parseInt(body.categoryId),
-        studentId: targetStudentId, // Menyimpan CUID
+        studentId: targetStudentId,
         status: "WAITING",
       },
       include: {

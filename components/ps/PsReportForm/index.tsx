@@ -17,6 +17,9 @@ import {
   NativeSelectOption,
 } from "@/components/ui/native-select";
 import { cn } from "@/libs/utils";
+import { ReportCategories } from "@/app/generated/prisma/client";
+import { SetStateAction } from "react";
+import { AdminView } from "@/types/AdminView";
 
 const STATUS_OPTIONS = [
   { id: "WAITING", label: "Menunggu..." },
@@ -25,14 +28,33 @@ const STATUS_OPTIONS = [
   { id: "RESOLVED", label: "Selesai" },
 ];
 
-function PsReportForm({
+interface ReportData {
+  id?: string;
+  message: string;
+  categoryId: number;
+  studentId?: string;
+  status?: "WAITING" | "IN_PROGRESS" | "REJECTED" | "RESOLVED";
+}
+
+type ReportForm = {
+  fullWidth: boolean;
+  categories: ReportCategories[];
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void> | void;
+  setIsSection: React.Dispatch<SetStateAction<AdminView>>;
+  status: number | undefined;
+  data?: ReportData | null;
+  context?: "admin" | "student";
+};
+
+export default function PsReportForm({
   fullWidth = false,
   categories = [],
   onSubmit,
   setIsSection,
   status,
   data = null,
-}: any) {
+  context = "admin",
+}: ReportForm) {
   const formKey = data?.id || "new-form";
 
   return (
@@ -59,7 +81,7 @@ function PsReportForm({
 
         <form onSubmit={onSubmit} key={formKey}>
           <CardContent className="flex flex-col gap-4">
-            {!data && (
+            {!data && context == "admin" && (
               <div className="grid gap-2">
                 <Label htmlFor="nis">NIS (Nomor Induk Siswa)</Label>
                 <Input
@@ -72,7 +94,7 @@ function PsReportForm({
               </div>
             )}
 
-            {data && (
+            {data && context == "admin" && (
               <div className="grid gap-2 p-3 border rounded-md bg-blue-50/50 border-blue-100">
                 <Label htmlFor="status" className="text-blue-700 font-semibold">
                   Update Status Laporan
@@ -117,7 +139,7 @@ function PsReportForm({
                 id="message"
                 name="message"
                 defaultValue={data?.message}
-                className="min-h-[120px]"
+                className="min-h-[120px] resize-none"
                 required
               />
             </div>
@@ -133,5 +155,3 @@ function PsReportForm({
     </div>
   );
 }
-
-export default PsReportForm;

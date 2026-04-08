@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { AdminView } from "@/types/AdminView";
 import PsReportForm from "@/components/ps/PsReportForm";

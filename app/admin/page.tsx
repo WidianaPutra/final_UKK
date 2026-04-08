@@ -6,7 +6,7 @@ import AdminSection from "@/sections/ps/PsAdmin/AdminSection";
 import AdminClassSection from "@/sections/ps/PsAdmin/ClassSection";
 import AdminReportCategorySection from "@/sections/ps/PsAdmin/ReportCategory";
 import AdminReportSection from "@/sections/ps/PsAdmin/ReportSection";
-import AdminStudentSection from "@/sections/ps/PsAdmin/StudentSection";
+import AdminStudentSection from "@/sections/ps/StudentSection";
 import PsSVG from "@/components/ps/PsSVG";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";

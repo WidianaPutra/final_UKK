@@ -169,16 +169,9 @@ export default function PsReportTable({
             : `Data laporan dengan status ${currentFilter}`
         }
         headerDatas={
-          [
-            "No",
-            context == "admin" ? "Nama Siswa" : null,
-            context == "admin" ? "Kelas" : null,
-            "Kategori",
-            "Pesan",
-            "Status",
-            "Tanggal",
-            "Aksi",
-          ].filter(Boolean) as string[]
+          ["No", "Kategori", "Pesan", "Status", "Tanggal", "Aksi"].filter(
+            Boolean,
+          ) as string[]
         }
       >
         <TableBody>
@@ -194,25 +187,6 @@ export default function PsReportTable({
                 <TableCell className="font-medium text-gray-500">
                   {index + 1}
                 </TableCell>
-
-                {context == "admin" && (
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-sm">
-                        {report.student.name}
-                      </span>
-                      <span className="text-xs text-gray-400">
-                        NIS: {report.student.nis}
-                      </span>
-                    </div>
-                  </TableCell>
-                )}
-
-                {context == "admin" && (
-                  <TableCell className="text-sm text-gray-600">
-                    {report.student?.class?.className}
-                  </TableCell>
-                )}
 
                 <TableCell className="text-sm text-gray-600">
                   {report.category.name}
@@ -232,7 +206,6 @@ export default function PsReportTable({
                 </TableCell>
 
                 <TableCell>
-                  {/* Dropdown tetap sama */}
                   <PsDropdown
                     label="Aksi"
                     align="end"
