@@ -11,7 +11,7 @@ const StudentUpdateSchema = z
     email: z.string().email().optional(),
     phone: z.string().min(8).optional(),
     birthday: z.string().datetime().optional(),
-    className: z.string().min(1).optional(),
+    classId: z.number().min(1).optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {
     message: "Minimal satu field harus diisi untuk update",

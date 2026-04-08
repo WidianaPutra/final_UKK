@@ -1,93 +1,78 @@
 "use client";
 
-export type DummyAdmin = {
-  id: number;
-  className: string;
-  craetedAt: string;
-};
-
-export const dummyAdmins: DummyAdmin[] = [
-  {
-    id: 1,
-    className: "XII RPL 1",
-    craetedAt: "2026-03-01",
-  },
-  {
-    id: 2,
-    className: "XII RPL 1",
-    craetedAt: "2026-03-01",
-  },
-  {
-    id: 1,
-    className: "XII RPL 1",
-    craetedAt: "2026-03-01",
-  },
-  {
-    id: 1,
-    className: "XII RPL 1",
-    craetedAt: "2026-03-01",
-  },
-];
-
+import { useState, useEffect } from "react";
+import axios from "axios";
 import PsDropdown from "@/components/ps/PsDropDown";
 import PsSVG from "@/components/ps/PsSVG";
 import PsTable from "@/components/ps/PsTable";
+import { Button } from "@/components/ui/button";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { cn } from "@/libs/utils";
 
-export default function PsClassTable() {
-  function handleDetail(id: number) {}
+export default function PsClassTable({
+  setIsSection,
+  setIdSelected,
+}: {
+  setIsSection: (val: "table" | "new" | "edit") => void;
+  setIdSelected: (id: number | null) => void;
+}) {
+  const [classes, setClasses] = useState<any[]>([]);
 
-  function handleEdit(id: number) {}
+  const fetchClasses = async () => {
+    try {
+      const res = await axios.get("/api/class");
+      setClasses(res.data?.data || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  function handleDelete(id: number) {}
+  useEffect(() => {
+    fetchClasses();
+  }, []);
+
+  const handleDelete = async (id: number) => {
+    try {
+      await axios.delete(`/api/class/${id}`);
+      fetchClasses();
+    } catch (err) {
+      alert("Gagal menghapus kelas. Pastikan kelas tidak memiliki siswa.");
+    }
+  };
 
   return (
-    <>
-      <h1 className="text-3xl font-extrabold pb-5">Kelas</h1>
+    <div>
+      <div className="flex justify-between items-center pb-5">
+        <h1 className="text-3xl font-extrabold">Kelas</h1>
+        <Button onClick={() => setIsSection("new")}>Tambah Kelas</Button>
+      </div>
 
       <PsTable
-        tableCaption="Data admin"
+        tableCaption="Daftar kelas yang tersedia"
         headerDatas={["No", "Nama Kelas", "Dibuat", "Aksi"]}
       >
         <TableBody>
-          {dummyAdmins.map((className, index) => (
+          {classes.map((cls, index) => (
             <TableRow
-              key={index}
-              className={cn(
-                "transition-colors cursor-pointer",
-                index % 2 === 0 ? "bg-white" : "bg-gray-50",
-              )}
+              key={cls.id}
+              className={cn(index % 2 === 0 ? "bg-white" : "bg-gray-50")}
             >
-              {/* No */}
-              <TableCell className="text-sm text-gray-600 hidden md:table-cell">
-                {index + 1}
+              <TableCell className="text-sm font-medium">{index + 1}</TableCell>
+              <TableCell className="text-sm font-bold">
+                {cls.className}
               </TableCell>
-              {/* Class name */}
-              <TableCell className="text-sm text-gray-600 hidden md:table-cell">
-                {className.className}
-              </TableCell>
-
-              {/* CreatedAt */}
               <TableCell className="text-sm text-gray-500">
-                {new Date(className.craetedAt).toLocaleDateString("id-ID", {
+                {new Date(cls.createdAt).toLocaleDateString("id-ID", {
                   day: "numeric",
                   month: "long",
                   year: "numeric",
                 })}
               </TableCell>
-
-              {/* Aksi */}
               <TableCell>
                 <PsDropdown
                   label="Aksi"
                   align="end"
                   items={[
-                    {
-                      label: "Detail",
-                      value: "detail",
-                      icon: <PsSVG name="eye" className="w-4 h-4" />,
-                    },
                     {
                       label: "Edit",
                       value: "edit",
@@ -102,17 +87,18 @@ export default function PsClassTable() {
                         <PsSVG name="trash" className="w-4 h-4 text-red-500" />
                       ),
                       alert: {
-                        title: "Hapus Laporan?",
-                        description: `Laporan ini akan dihapus secara permanen dan tidak dapat dikembalikan.`,
+                        title: "Hapus Kelas?",
+                        description: `Data kelas ${cls.className} akan dihapus permanen.`,
                         confirmText: "Ya, Hapus",
-                        cancelText: "Batal",
-                        onConfirm: () => handleDelete(className.id),
+                        onConfirm: () => handleDelete(cls.id),
                       },
                     },
                   ]}
                   onSelect={(item) => {
-                    if (item.value === "detail") handleDetail(className?.id);
-                    if (item.value === "edit") handleEdit(className?.id);
+                    if (item.value === "edit") {
+                      setIdSelected(cls.id);
+                      setIsSection("edit");
+                    }
                   }}
                 />
               </TableCell>
@@ -120,6 +106,6 @@ export default function PsClassTable() {
           ))}
         </TableBody>
       </PsTable>
-    </>
+    </div>
   );
 }

@@ -7,69 +7,56 @@ import PsSVG from "@/components/ps/PsSVG";
 import PsTable from "@/components/ps/PsTable";
 import { Button } from "@/components/ui/button";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { AdminView } from "@/types/AdminView";
+import { cn } from "@/libs/utils";
 
-export default function PsAdminTable({
-  setIsSection,
-  setIdSelected,
-}: {
-  setIsSection: (val: AdminView) => void;
-  setIdSelected: (id: string | null) => void;
-}) {
-  const [admins, setAdmins] = useState<any[]>([]);
+export default function PsCategoryTable({ setIsSection, setIdSelected }: any) {
+  const [categories, setCategories] = useState<any[]>([]);
 
-  const fetchAdmins = async () => {
+  const fetchCategories = async () => {
     try {
-      const res = await axios.get("/api/admin");
-      setAdmins(res.data?.data || []);
+      const res = await axios.get("/api/report-category");
+      setCategories(res.data || []);
     } catch (err) {
       console.error(err);
     }
   };
 
   useEffect(() => {
-    fetchAdmins();
+    fetchCategories();
   }, []);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`/api/admin/${id}`);
-      fetchAdmins();
+      await axios.delete(`/api/report-category/${id}`);
+      fetchCategories();
     } catch (err) {
-      alert("Gagal menghapus admin");
+      alert("Gagal menghapus kategori.");
     }
   };
 
   return (
-    <div className="w-full">
+    <>
       <div className="flex justify-between items-center pb-5">
-        <h1 className="text-3xl font-extrabold">Admin</h1>
-        <Button onClick={() => setIsSection("new")}>Tambah Admin</Button>
+        <h1 className="text-3xl font-extrabold">Kategori Laporan</h1>
+        <Button onClick={() => setIsSection("new")}>Tambah Kategori</Button>
       </div>
 
       <PsTable
-        tableCaption="Data admin sekolah"
-        headerDatas={[
-          "No",
-          "Nama",
-          "Email",
-          "No. Telepon",
-          "Bergabung",
-          "Aksi",
-        ]}
+        tableCaption="Manajemen kategori pengaduan"
+        headerDatas={["No", "Nama Kategori", "Total Laporan", "Aksi"]}
       >
         <TableBody>
-          {admins.map((admin, index) => (
+          {categories.map((cat, index) => (
             <TableRow
-              key={admin.id}
-              className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+              key={cat.id}
+              className={cn(index % 2 === 0 ? "bg-white" : "bg-gray-50")}
             >
-              <TableCell className="text-gray-500">{index + 1}</TableCell>
-              <TableCell className="font-semibold">{admin.name}</TableCell>
-              <TableCell>{admin.email}</TableCell>
-              <TableCell>{admin.phone}</TableCell>
+              <TableCell>{index + 1}</TableCell>
+              <TableCell className="font-bold">{cat.name}</TableCell>
               <TableCell>
-                {new Date(admin.createdAt).toLocaleDateString("id-ID")}
+                <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">
+                  {cat._count?.reports || 0} Laporan
+                </span>
               </TableCell>
               <TableCell>
                 <PsDropdown
@@ -90,16 +77,16 @@ export default function PsAdminTable({
                         <PsSVG name="trash" className="w-4 h-4 text-red-500" />
                       ),
                       alert: {
-                        title: "Hapus Admin?",
-                        description: `Data ${admin.name} akan dihapus permanen.`,
-                        confirmText: "Hapus",
-                        onConfirm: () => handleDelete(admin.id),
+                        title: "Hapus Kategori?",
+                        description:
+                          "Menghapus kategori mungkin berdampak pada data laporan yang sudah ada.",
+                        onConfirm: () => handleDelete(cat.id),
                       },
                     },
                   ]}
                   onSelect={(item) => {
                     if (item.value === "edit") {
-                      setIdSelected(admin.id);
+                      setIdSelected(cat.id);
                       setIsSection("edit");
                     }
                   }}
@@ -109,6 +96,6 @@ export default function PsAdminTable({
           ))}
         </TableBody>
       </PsTable>
-    </div>
+    </>
   );
 }

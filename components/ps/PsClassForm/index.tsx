@@ -15,16 +15,18 @@ import { cn } from "@/libs/utils";
 
 type PsClassFormProps = {
   fullWidth?: boolean;
-  type?: "CREATE" | "UPDATE";
   status?: number | null;
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+  setIsSection: (val: "table" | "new" | "edit") => void;
+  data?: any | null;
 };
 
 function PsClassForm({
   fullWidth = false,
-  type = "CREATE",
   status = null,
   onSubmit,
+  setIsSection,
+  data = null,
 }: PsClassFormProps) {
   const getErrorMessage = () => {
     if (status === 409) return "Nama kelas sudah ada. Gunakan nama lain.";
@@ -32,26 +34,39 @@ function PsClassForm({
     if (status && status >= 500) return "Terjadi kesalahan pada server.";
     return null;
   };
+
   return (
     <div className={cn(fullWidth ? "w-full" : "w-full max-w-[450px]")}>
+      <Button
+        variant="outline"
+        className="mb-4"
+        onClick={() => setIsSection("table")}
+      >
+        Kembali
+      </Button>
+
       <Card>
         <CardHeader>
-          <CardTitle className="font-bold">Tambah Kelas</CardTitle>
+          <CardTitle className="font-bold">
+            {data ? "Edit Kelas" : "Tambah Kelas"}
+          </CardTitle>
           <CardDescription>
-            Isi data siswa dengan lengkap dan benar.
+            {data
+              ? "Ubah nama kelas yang sudah ada."
+              : "Buat grup kelas baru untuk siswa."}
           </CardDescription>
         </CardHeader>
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} key={data?.id || "new-class"}>
           <CardContent className="flex flex-col gap-4">
-            {/* Nama */}
             <div className="grid gap-2">
               <Label htmlFor="class">Nama Kelas</Label>
               <Input
                 id="class"
                 name="class"
                 type="text"
-                placeholder="Nama Kelas"
+                placeholder="Contoh: XII RPL 1"
+                defaultValue={data?.className}
                 required
               />
 
@@ -71,7 +86,7 @@ function PsClassForm({
 
           <CardFooter>
             <Button type="submit" className="w-full my-2">
-              Simpan Kelas
+              {data ? "Perbarui Kelas" : "Simpan Kelas"}
             </Button>
           </CardFooter>
         </form>

@@ -1,3 +1,5 @@
+"use client";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -9,27 +11,63 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { NativeSelectOption } from "@/components/ui/native-select";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@/components/ui/native-select";
 import { cn } from "@/libs/utils";
-import { Class } from "@/app/generated/prisma/client";
-import PsSelect from "@/components/ps/PsSelect";
+import { Class, Student } from "@/app/generated/prisma/client";
+import { AdminView } from "@/types/AdminView";
 
 type PsStudentFormProps = {
   fullWidth?: boolean;
   classes: Array<Class>;
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+  setIsSection: React.Dispatch<React.SetStateAction<AdminView>>;
+  status?: number;
+  data?: Student | null;
 };
 
 function PsStudentForm({
   fullWidth = false,
   classes = [],
   onSubmit,
+  setIsSection,
+  status,
+  data = null,
 }: PsStudentFormProps) {
+  const [selectedClass, setSelectedClass] = useState<number | undefined>(
+    data?.classId,
+  );
+
+  useEffect(() => {
+    if (data?.classId) {
+      setSelectedClass(data.classId);
+    }
+  }, [data]);
+
+  const getErrorMessage = () => {
+    if (status === 409) return "NIS sudah ada. Gunakan nomor lain.";
+    if (status === 400) return "Data yang dikirim tidak valid.";
+    if (status && status >= 500) return "Terjadi kesalahan pada server.";
+    return null;
+  };
+
   return (
     <div className={cn(fullWidth ? "w-full" : "w-full max-w-[450px]")}>
+      <Button
+        variant="outline"
+        className="my-3"
+        onClick={() => setIsSection("table")}
+      >
+        Kembali
+      </Button>
+
       <Card>
         <CardHeader>
-          <CardTitle className="font-bold">Tambah Siswa</CardTitle>
+          <CardTitle className="font-bold">
+            {data ? "Edit Siswa" : "Tambah Siswa"}
+          </CardTitle>
           <CardDescription>
             Isi data siswa dengan lengkap dan benar.
           </CardDescription>
@@ -45,6 +83,7 @@ function PsStudentForm({
                 name="nis"
                 type="number"
                 placeholder="Nomor Induk Siswa"
+                defaultValue={data?.nis}
                 required
               />
             </div>
@@ -57,6 +96,7 @@ function PsStudentForm({
                 name="name"
                 type="text"
                 placeholder="Nama lengkap siswa"
+                defaultValue={data?.name}
                 required
               />
             </div>
@@ -69,6 +109,7 @@ function PsStudentForm({
                 name="email"
                 type="email"
                 placeholder="email@sekolah.com"
+                defaultValue={data?.email}
                 required
               />
             </div>
@@ -81,6 +122,7 @@ function PsStudentForm({
                 name="phone"
                 type="tel"
                 placeholder="08xxxxxxxxxx"
+                defaultValue={data?.phone}
                 required
               />
             </div>
@@ -88,28 +130,53 @@ function PsStudentForm({
             {/* Birthday */}
             <div className="grid gap-2">
               <Label htmlFor="birthday">Tanggal Lahir</Label>
-              <Input id="birthday" name="birthday" type="date" required />
+              <Input
+                id="birthday"
+                name="birthday"
+                type="date"
+                defaultValue={
+                  data?.birthday
+                    ? new Date(data.birthday).toISOString().slice(0, 10)
+                    : ""
+                }
+                required
+              />
             </div>
 
             {/* Class */}
             <div className="grid gap-2">
               <Label htmlFor="classId">Kelas</Label>
-              <PsSelect name="classId">
+              <NativeSelect
+                id="classId" // Tambahkan ID agar Label berfungsi
+                className="cursor-pointer"
+                name="classId" // Gunakan classId agar sesuai dengan schema Prisma umumnya
+                value={selectedClass}
+                onChange={(e) =>
+                  setSelectedClass(parseInt(e.target.value as string, 10))
+                }
+                required
+              >
                 <NativeSelectOption value="">
                   -- Pilih Kelas --
                 </NativeSelectOption>
-                {classes.map((c) => (
-                  <NativeSelectOption key={c.id} value={c.id}>
+                {classes?.map((c) => (
+                  <NativeSelectOption key={c.id} value={c.id.toString()}>
                     {c.className}
                   </NativeSelectOption>
                 ))}
-              </PsSelect>
+              </NativeSelect>
             </div>
+
+            {getErrorMessage() && (
+              <p className="text-xs font-medium text-red-500 bg-red-50 p-2 rounded">
+                {getErrorMessage()}
+              </p>
+            )}
           </CardContent>
 
           <CardFooter>
             <Button type="submit" className="w-full my-2">
-              Simpan Siswa
+              {data ? "Perbarui Siswa" : "Simpan Siswa"}
             </Button>
           </CardFooter>
         </form>

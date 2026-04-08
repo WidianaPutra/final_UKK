@@ -56,7 +56,7 @@ function PsDropdown({
                 key={item.value}
                 disabled={item.disabled}
                 className="cursor-pointer gap-2 p-0 focus:bg-transparent"
-                onSelect={(e) => e.preventDefault()} // cegah dropdown menutup sebelum alert muncul
+                onSelect={(e) => e.preventDefault()}
               >
                 <PsAlert
                   label={

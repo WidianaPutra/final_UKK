@@ -24,15 +24,6 @@ export default function PsStudentPage() {
         birthday: formData.get("birthday"),
         classId: formData.get("classId"),
       });
-
-      // console.log({
-      //   nis: formData.get("nis"),
-      //   name: formData.get("name"),
-      //   email: formData.get("email"),
-      //   phone: formData.get("phone"),
-      //   birthday: formData.get("birthday"),
-      //   classId,
-      // });
     } catch (err) {
       console.log(err);
     }

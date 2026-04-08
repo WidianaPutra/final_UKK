@@ -8,13 +8,14 @@ const StudentSchema = z.object({
   email: z.string().email("Format email tidak valid"),
   phone: z.string().min(8, "No. telepon minimal 8 karakter"),
   birthday: z.string().datetime("Format tanggal tidak valid"),
-  className: z.string().min(1, "Kelas wajib diisi"),
+  classId: z.number().min(1, "Kelas wajib diisi"),
 });
 
 export async function GET() {
   try {
     const students = await prisma.student.findMany({
       orderBy: { createdAt: "desc" },
+      include: { class: true },
     });
 
     return NextResponse.json({ data: students }, { status: 200 });
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { nis, name, email, phone, birthday, className } = parsed.data;
+    const { nis, name, email, phone, birthday, classId } = parsed.data;
 
     // Cek duplikat NIS
     const existingNis = await prisma.student.findUnique({ where: { nis } });
@@ -60,7 +61,7 @@ export async function POST(req: NextRequest) {
         email,
         phone,
         birthday: new Date(birthday),
-        className,
+        classId,
       },
     });
 

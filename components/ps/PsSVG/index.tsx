@@ -13,6 +13,8 @@ import {
   Eye,
   LucideProps,
   LogOut,
+  BookOpenText,
+  Layers,
 } from "lucide-react";
 
 const SVGList = {
@@ -28,6 +30,8 @@ const SVGList = {
   trash: Trash,
   eye: Eye,
   "log-out": LogOut,
+  "book-open-text": BookOpenText,
+  layers: Layers,
 };
 
 export type SVGListTypes = keyof typeof SVGList;
@@ -51,7 +55,7 @@ const PsSVG = ({
       style={{
         width: size ?? undefined,
         height: size ?? undefined,
-        minWidth: size ?? undefined, // ← ini kuncinya, mencegah flex shrink
+        minWidth: size ?? undefined,
         minHeight: size ?? undefined,
       }}
       className={cn(!size && "aspect-square", className)}
